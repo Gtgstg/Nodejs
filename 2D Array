@@ -1,0 +1,86 @@
+const createCRM = () =>{
+    let sheet= [["Ticket", "Last Updated", "Subject", "From", "Priority", "Assigned To", "Department", "Date Created"]];
+    return sheet;
+    
+}
+
+const addEntries = (sheet, entries) => {
+    let totalEntries = sheet.length;
+    entries.splice(0, 0, totalEntries); 
+    sheet.push(entries);
+}
+
+const updateEntries = (sheet, ticketNumber, columnToUpdate, updates) =>{
+    let columnSize = sheet[0].length;
+    
+    for(let col = 0; col < columnSize; col++){
+    
+        // finding the index which needs to update
+        let updateIndex = columnToUpdate.indexOf(sheet[0][col]);
+        if(updateIndex != -1){
+            sheet[ticketNumber][col] = updates[updateIndex];
+        }
+    }
+}
+
+const deleteEntries = (sheet, ticketNumber) =>{
+    let rowIndex = sheet.findIndex( row => row[0] === ticketNumber);
+    sheet.splice(rowIndex, 1);
+}
+
+const searchEntries = (sheet, searchBy, value) =>{
+    let columnIndex = sheet[0].indexOf(searchBy);
+    
+    for(let row = 0; row < sheet.length; row++){
+        if(sheet[row][columnIndex] === value){
+            return sheet[row];
+        }
+    }
+}
+
+const sortByColumn = (sheet, column) => {
+    let columnIndex = sheet[0].indexOf(column);
+    sheet.sort((a, b) =>{
+        return a[columnIndex].localeCompare(b[columnIndex]);
+    });
+}
+
+//create CRM
+let sheet1 = createCRM();
+console.table(sheet1);
+
+//add entries
+let entry_1 = [new Date(), "New mail", "Unacdemy", "High", "Support team", "Education", new Date()]
+addEntries(sheet1, entry_1);
+
+console.table(sheet1);
+
+let entry_2 = [new Date(), "Spam", "XYZ", "Low", "Technical Team", "Developement", new Date()]
+addEntries(sheet1, entry_2);
+
+console.table(sheet1);
+
+//update entries
+let ticketNumber = 2;
+let columns = ["From", "Assigned To"];
+let updates = ["Unacdemy", "Legal Team"];
+
+updateEntries(sheet1, ticketNumber, columns, updates);
+console.table(sheet1);
+
+//search entries
+let searchBy = "Assigned To";
+let value = "Legal Team";
+const searchedRow = searchEntries(sheet1, searchBy, value);
+console.log(searchedRow);
+
+//sort by column
+let column = "Assigned To";
+sortByColumn(sheet1, column);
+
+console.table(sheet1);
+
+// delete entries
+ticketNumber = 2;
+deleteEntries(sheet1, ticketNumber);
+console.table(sheet1);
